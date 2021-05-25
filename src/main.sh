@@ -180,7 +180,7 @@ function decrypt_sops_file {
 
   echo "Decrypting file..."
   echo $GOOGLE_CREDENTIALS > ${GITHUB_WORKSPACE}/key.json
-  GOOGLE_APPLICATION_CREDENTIALS=${GITHUB_WORKSPACE}/key.json sops -d ${secrets_file} > secrets.yml
+  GOOGLE_APPLICATION_CREDENTIALS=${GITHUB_WORKSPACE}/key.json sops -d ${decrypt_sops_file} > secrets.yml
 }
 
 function main {
