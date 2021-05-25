@@ -180,7 +180,7 @@ function decrypt_sops_file {
 
   echo "Decrypting file..."
   echo $GOOGLE_CREDENTIALS > ${GITHUB_WORKSPACE}/key.json
-  GOOGLE_APPLICATION_CREDENTIALS=${GITHUB_WORKSPACE}/key.json sops -d ${decrypt_sops_file} > secrets.yml
+  sops -d ${decrypt_sops_file} > secrets.yml
   chown 1001:121 secrets.yml
 }
 
@@ -201,8 +201,8 @@ function main {
   configureCLICredentials
   installTerraform
   cd ${GITHUB_WORKSPACE}/${tfWorkingDir}
+  export GOOGLE_APPLICATION_CREDENTIALS=${GITHUB_WORKSPACE}/key.json
   decrypt_sops_file
-  ls -lh; echo " "; pwd
 
   case "${tfSubcommand}" in
     fmt)
