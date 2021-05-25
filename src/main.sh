@@ -139,7 +139,7 @@ function installTerragrunt {
 
   echo "Moving Terragrunt ${tgVersion} to PATH"
   chmod +x /tmp/terragrunt
-  mv /tmp/terragrunt /usr/local/bin/terragrunt 
+  mv /tmp/terragrunt /usr/local/bin/terragrunt
   if [ "${?}" -ne 0 ]; then
     echo "Failed to move Terragrunt ${tgVersion}"
     exit 1
@@ -164,6 +164,12 @@ function main {
   configureCLICredentials
   installTerraform
   cd ${GITHUB_WORKSPACE}/${tfWorkingDir}
+  pwd; ls -la
+  secrets_file=secrets.yml
+  if [ -z "${secrets_file}" ]; then
+      echo "secrets-file is not set or is empty"
+      exit 1
+  fi
 
   case "${tfSubcommand}" in
     fmt)
