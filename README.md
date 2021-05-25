@@ -107,6 +107,7 @@ Outputs are used to pass information to subsequent GitHub Actions steps.
 Secrets are similar to inputs except that they are encrypted and only used by GitHub Actions. It's a convenient way to keep sensitive data out of the GitHub Actions workflow YAML file.
 
 * `GITHUB_TOKEN` - (Optional) The GitHub API token used to post comments to pull requests. Not required if the `tf_actions_comment` input is set to `false`.
+* `GOOGLE_CREDENTIALS` - (required) The Google Service Account Credential to apply Terragrunt and decrypt Sops file
 
 Other secrets may be needed to authenticate with Terraform backends and providers.
 

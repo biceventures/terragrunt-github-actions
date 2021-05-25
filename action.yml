@@ -33,6 +33,14 @@ inputs:
   tf_actions_fmt_write:
     description: 'Write Terragrunt fmt changes to source files.'
     default: false
+  decrypt_sops_file:
+    description: 'The file that contains sops encrypted secrets.'
+    required: true
+    default: 'secrets.enc.yml'
+  sops_version:
+    description: 'Sops version to install.'
+    required: true
+    default: '3.7.1'
 outputs:
   tf_actions_output:
     description: 'The Terragrunt outputs in JSON format.'

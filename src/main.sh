@@ -31,6 +31,13 @@ function parseInputs {
     exit 1
   fi
 
+  if [ "${INPUT_SOPS_VERSION}" != "" ]; then
+    sopsVersion=${INPUT_SOPS_VERSION}
+  else
+    echo "Input sops_version cannot be empty"
+    exit 1
+  fi
+
   if [ "${INPUT_TF_ACTIONS_SUBCOMMAND}" != "" ]; then
     tfSubcommand=${INPUT_TF_ACTIONS_SUBCOMMAND}
   else
@@ -72,6 +79,11 @@ function parseInputs {
   tfWorkspace="default"
   if [ -n "${TF_WORKSPACE}" ]; then
     tfWorkspace="${TF_WORKSPACE}"
+  fi
+
+  decrypt_sops_file="secrets.yml"
+  if [[ -n "${INPUT_DECRYPT_SOPS_FILE}" ]]; then
+    decrypt_sops_file=${INPUT_DECRYPT_SOPS_FILE}
   fi
 }
 
@@ -147,6 +159,30 @@ function installTerragrunt {
   echo "Successfully moved Terragrunt ${tgVersion}"
 }
 
+function decrypt_sops_file {
+  echo "File to decrypt: ${decrypt_sops_file}"
+
+  if [ -z "${decrypt_sops_file}" ]; then
+      echo "secrets-file is not set or is empty"
+      exit 1
+  fi
+
+  url="https://github.com/mozilla/sops/releases/download/v${sopsVersion}/sops-v${sopsVersion}.linux"
+  curl -s -S -L -o /tmp/sops ${url}
+  if [ "${?}" -ne 0 ]; then
+    echo "Failed to download Sops ${sopsVersion}"
+    exit 1
+  fi
+  chmod +x /tmp/sops
+  mv /tmp/sops /usr/local/bin/sops
+  echo "Sops version installed"
+  sops -version
+
+  echo "Decrypting file..."
+  echo $GOOGLE_CREDENTIALS > ${GITHUB_WORKSPACE}/key.json
+  GOOGLE_APPLICATION_CREDENTIALS=${GITHUB_WORKSPACE}/key.json sops -d ${secrets_file} > secrets.yml
+}
+
 function main {
   # Source the other files to gain access to their functions
   scriptDir=$(dirname ${0})
@@ -164,12 +200,7 @@ function main {
   configureCLICredentials
   installTerraform
   cd ${GITHUB_WORKSPACE}/${tfWorkingDir}
-  pwd; ls -la
-  secrets_file=secrets.yml
-  if [ -z "${secrets_file}" ]; then
-      echo "secrets-file is not set or is empty"
-      exit 1
-  fi
+  decrypt_sops_file
 
   case "${tfSubcommand}" in
     fmt)
