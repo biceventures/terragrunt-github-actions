@@ -201,6 +201,7 @@ function main {
   installTerraform
   cd ${GITHUB_WORKSPACE}/${tfWorkingDir}
   decrypt_sops_file
+  ls -lh; echo " "; pwd
 
   case "${tfSubcommand}" in
     fmt)
