@@ -1,6 +1,11 @@
 #!/bin/bash
 
 function terragruntInit {
+  # Config github credential for download private github repo
+  if [ "${githubToken}" != "" ]; then
+    git config --global url."https://oauth2:${githubToken}@github.com".insteadOf "https://github.com"
+  fi
+
   # Gather the output of `terragrunt init`.
   echo "init: info: initializing Terragrunt configuration in ${tfWorkingDir}"
   initOutput=$(${tfBinary} init -input=false ${*} 2>&1)

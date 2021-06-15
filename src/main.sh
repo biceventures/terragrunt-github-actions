@@ -85,6 +85,10 @@ function parseInputs {
   if [[ -n "${INPUT_DECRYPT_SOPS_FILE}" ]]; then
     decrypt_sops_file=${INPUT_DECRYPT_SOPS_FILE}
   fi
+
+  if [ "${INPUT_GITHUB_TOKEN}" != "" ]; then
+    githubToken=${INPUT_GITHUB_TOKEN}
+  fi
 }
 
 function configureCLICredentials {
