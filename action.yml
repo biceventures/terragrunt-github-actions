@@ -43,8 +43,8 @@ inputs:
     default: '3.7.1'
   github_token:
     description: 'Github auth token used to API'
-    required: true
-    default: "${{ github.token }}"
+    required: false
+    default: ""
 outputs:
   tf_actions_output:
     description: 'The Terragrunt outputs in JSON format.'
